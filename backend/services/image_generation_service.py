@@ -13,9 +13,24 @@ class ImageGenerationService:
     """Service class for image generation using AWS Bedrock models"""
 
     def __init__(self):
-        self.bedrock_client = boto3.client("bedrock-runtime")
+        self.bedrock_client = None
+        self._bedrock_initialized = False
         self.flux_api_key = None  # Will be set from environment
         self.flux_base_url = "https://api.bfl.ai/v1"
+
+    def _initialize_bedrock_client(self):
+        """Initialize Bedrock client (lazy loading)"""
+        if self._bedrock_initialized:
+            return
+
+        try:
+            self.bedrock_client = boto3.client("bedrock-runtime")
+            logger.info("AWS Bedrock client initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize AWS Bedrock client: {e}")
+            self.bedrock_client = None
+
+        self._bedrock_initialized = True
 
     def set_flux_api_key(self, api_key: str):
         """Set the FLUX API key"""
@@ -25,6 +40,8 @@ class ImageGenerationService:
         self, prompt: str, width: int = 1024, height: int = 1024
     ) -> str:
         """Generate image using Titan Image Generator G1"""
+        if not self._bedrock_initialized:
+            self._initialize_bedrock_client()
         if not self.bedrock_client:
             raise Exception("AWS Bedrock client not initialized")
 
@@ -56,6 +73,8 @@ class ImageGenerationService:
         self, prompt: str, width: int = 1024, height: int = 1024
     ) -> str:
         """Generate image using Titan Image Generator G1 v2"""
+        if not self._bedrock_initialized:
+            self._initialize_bedrock_client()
         if not self.bedrock_client:
             raise Exception("AWS Bedrock client not initialized")
 
@@ -87,6 +106,8 @@ class ImageGenerationService:
         self, prompt: str, width: int = 1024, height: int = 1024
     ) -> str:
         """Generate image using Nova Canvas"""
+        if not self._bedrock_initialized:
+            self._initialize_bedrock_client()
         if not self.bedrock_client:
             raise Exception("AWS Bedrock client not initialized")
 
@@ -117,6 +138,8 @@ class ImageGenerationService:
         self, prompt: str, width: int = 1024, height: int = 1024
     ) -> str:
         """Generate image using SDXL 1.0"""
+        if not self._bedrock_initialized:
+            self._initialize_bedrock_client()
         if not self.bedrock_client:
             raise Exception("AWS Bedrock client not initialized")
 
