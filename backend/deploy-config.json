@@ -1,0 +1,8 @@
+{
+    "application_name": "clonefluencer-api",
+    "environment_name": "clonefluencer-api-prod",
+    "region": "us-east-1",
+    "platform": "64bit Amazon Linux 2023 v4.0.11 running Python 3.12",
+    "instance_type": "t3.micro",
+    "description": "Clonefluencer AI Virtual Influencer Platform Backend API"
+}

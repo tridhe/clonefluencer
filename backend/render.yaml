@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: clonefluencer-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT application:application
+    healthCheckPath: /health
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: DYNAMODB_TABLE_NAME
+        sync: false
+      - key: S3_BUCKET_NAME
+        sync: false
+      - key: FLUX_API_KEY
+        sync: false

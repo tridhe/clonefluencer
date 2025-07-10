@@ -1,41 +1,126 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.pnp.js
+.yarn/install-state.gz
 
-# testing
+# Testing
 /coverage
 
-# next.js
+# Next.js
 /.next/
 /out/
 
-# production
+# Production
 /build
 
-# misc
+# Misc
 .DS_Store
 *.pem
 
-# debug
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Local env files
+.env*.local
+.env
+.env.example
 
-# vercel
+# Vercel
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# Python lib directories (but not src/lib which contains our TypeScript code)
+lib64/
+backend/lib/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Backend virtual environment
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# AWS
+.aws/
+aws-config/
+
+# Manual deployment artifacts (no longer needed with GitHub deployment)
+deployments/
+*.zip
+backend/deployment-package.zip
+manual-upload-*.zip
+
+# Temporary deployment files
+temp-deploy/
+deploy-temp/
+
+# Security - Never commit real credentials
+backend/.env
+backend/env.example
+*.pem
+*.key
+credentials.json
+
+# Manual deployment scripts (replaced by GitHub deployment)
+deploy.sh
+deploy-serverless.sh
+package-for-manual-upload.sh
+
+# AWS setup files with real usernames/sensitive info
+aws-permissions-setup.md
+
+# Keep github-deployment-guide.md - it's helpful for deployment
+
+# Elastic Beanstalk (not using this anymore)
+backend/.elasticbeanstalk/
+
+# Node.js runtime files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backup files
+*.backup
+*.bak
+*.tmp
