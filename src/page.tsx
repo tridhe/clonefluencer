@@ -1,5 +1,6 @@
 'use client';
 
+// Updated environment variables for Amplify deployment
 import { useState, useEffect } from 'react';
 import { Sparkles, ArrowRight, Download, User, Camera, Zap, Shield, Database, Settings, Smartphone } from 'lucide-react';
 import Image from 'next/image';

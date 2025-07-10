@@ -1,0 +1,103 @@
+  File "/app/routes/image_routes.py", line 9, in <module>
+
+    from services.image_generation_service import ImageGenerationService
+
+  File "/app/services/image_generation_service.py", line 297, in <module>
+
+    image_service = ImageGenerationService()
+
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/app/services/image_generation_service.py", line 16, in __init__
+
+    self.bedrock_client = boto3.client("bedrock-runtime")
+
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/boto3/__init__.py", line 92, in client
+
+    return _get_default_session().client(*args, **kwargs)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/boto3/session.py", line 322, in client
+
+    return self._session.create_client(
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/context.py", line 123, in wrapper
+
+    return func(*args, **kwargs)
+
+           ^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/session.py", line 1027, in create_client
+
+    client = client_creator.create_client(
+
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/client.py", line 157, in create_client
+
+    client_args = self._get_client_args(
+
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/client.py", line 556, in _get_client_args
+
+    return args_creator.get_client_args(
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/args.py", line 121, in get_client_args
+
+    final_args = self.compute_client_args(
+
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/args.py", line 245, in compute_client_args
+
+    endpoint_config = self._compute_endpoint_config(
+
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/args.py", line 433, in _compute_endpoint_config
+
+    return self._resolve_endpoint(**resolve_endpoint_kwargs)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/args.py", line 538, in _resolve_endpoint
+
+    return endpoint_bridge.resolve(
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/client.py", line 670, in resolve
+
+    resolved = self.endpoint_resolver.construct_endpoint(
+
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/regions.py", line 233, in construct_endpoint
+
+    result = self._endpoint_for_partition(
+
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/usr/local/lib/python3.12/site-packages/botocore/regions.py", line 281, in _endpoint_for_partition
+
+    raise NoRegionError()
+
+botocore.exceptions.NoRegionError: You must specify a region.
+
+[2025-07-10 23:28:02 +0000] [3] [INFO] Worker exiting (pid: 3)
+
+[2025-07-10 23:28:03 +0000] [1] [ERROR] Worker (pid:2) exited with code 3
+
+[2025-07-10 23:28:03 +0000] [1] [ERROR] Worker (pid:3) was sent SIGTERM!
+
+[2025-07-10 23:28:03 +0000] [1] [ERROR] Shutting down: Master
+
+[2025-07-10 23:28:03 +0000] [1] [ERROR] Reason: Worker failed to boot.
