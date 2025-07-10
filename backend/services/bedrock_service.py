@@ -10,29 +10,39 @@ class BedrockService:
     """Service class for AWS Bedrock interactions"""
 
     def __init__(self):
-        self.client = self._initialize_client()
+        self.client = None
+        self._initialized = False
 
     def _initialize_client(self):
-        """Initialize AWS Bedrock client"""
+        """Initialize AWS Bedrock client (lazy loading)"""
+        if self._initialized:
+            return self.client
+
         try:
-            client = boto3.client(
+            self.client = boto3.client(
                 "bedrock-runtime",
                 region_name=os.getenv("AWS_REGION", "us-east-1"),
                 aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
                 aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
             )
             logger.info("AWS Bedrock client initialized successfully")
-            return client
+            self._initialized = True
+            return self.client
         except Exception as e:
             logger.error(f"Failed to initialize AWS Bedrock client: {e}")
+            self._initialized = True
             return None
 
     def is_available(self) -> bool:
         """Check if Bedrock client is available"""
+        if not self._initialized:
+            self._initialize_client()
         return self.client is not None
 
     def invoke_claude(self, prompt: str, max_tokens: int = 1000) -> str:
         """Invoke Claude 3 model via AWS Bedrock"""
+        if not self._initialized:
+            self._initialize_client()
         if not self.client:
             raise Exception("AWS Bedrock client not initialized")
 
@@ -58,6 +68,8 @@ class BedrockService:
 
     def invoke_titan_text(self, prompt: str, max_tokens: int = 1000) -> str:
         """Invoke Amazon Titan text model via AWS Bedrock"""
+        if not self._initialized:
+            self._initialize_client()
         if not self.client:
             raise Exception("AWS Bedrock client not initialized")
 

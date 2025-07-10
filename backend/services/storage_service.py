@@ -14,17 +14,21 @@ class StorageService:
         self.dynamodb = None
         self.s3_client = None
         self.enabled = False
+        self._initialized = False
+
+        # Table and bucket names from environment variables
+        self.table_name = os.getenv("DYNAMODB_TABLE_NAME", "influencer-ai-generations")
+        self.bucket_name = os.getenv("S3_BUCKET_NAME", "influencer-ai-images")
+
+    def _initialize_aws_services(self):
+        """Initialize AWS services (lazy loading)"""
+        if self._initialized:
+            return
 
         try:
             # Initialize AWS services
             self.dynamodb = boto3.resource("dynamodb")
             self.s3_client = boto3.client("s3")
-
-            # Table and bucket names from environment variables
-            self.table_name = os.getenv(
-                "DYNAMODB_TABLE_NAME", "influencer-ai-generations"
-            )
-            self.bucket_name = os.getenv("S3_BUCKET_NAME", "influencer-ai-images")
 
             # Get or create DynamoDB table
             self.table = self._get_or_create_table()
@@ -37,6 +41,8 @@ class StorageService:
                 "📝 Image storage will be disabled. Follow AWS_STORAGE_SETUP.md to enable it."
             )
             self.enabled = False
+
+        self._initialized = True
 
     def _get_or_create_table(self):
         """Get existing table or create if it doesn't exist"""
@@ -110,13 +116,15 @@ class StorageService:
             prompt: Original or enhanced prompt used
             image_model: AI model used for image generation
             llm_model: LLM model used for prompt enhancement
-            image_data: Raw image bytes
+            image_data: bytes
             character_data: Character builder data (optional)
             enhanced_prompt: Enhanced version of prompt (optional)
 
         Returns:
             Dictionary with generation details
         """
+        if not self._initialized:
+            self._initialize_aws_services()
         if not self.enabled:
             return {"success": False, "error": "Storage service not available"}
 
@@ -219,6 +227,15 @@ class StorageService:
         Returns:
             Dictionary with generations and pagination info
         """
+        if not self._initialized:
+            self._initialize_aws_services()
+        if not self.enabled:
+            return {
+                "success": False,
+                "error": "Storage service not available",
+                "generations": [],
+            }
+
         try:
             query_params = {
                 "IndexName": "user-index",
@@ -421,6 +438,16 @@ class StorageService:
         self, limit: int = 50, last_key: Optional[str] = None
     ) -> Dict[str, Any]:
         """Get public generations for the explore page using DynamoDB scan with filter"""
+        if not self._initialized:
+            self._initialize_aws_services()
+        if not self.enabled:
+            return {
+                "success": False,
+                "error": "Storage service not available",
+                "generations": [],
+                "count": 0,
+            }
+
         try:
             print("📊 Attempting to scan DynamoDB for public generations...")
 
