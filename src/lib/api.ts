@@ -25,7 +25,7 @@ const apiService = {
   },
 
   generateCharacterPrompt: async (data: any) => {
-    const response = await fetch(`${API_BASE_URL}/api/prompt/generate`, {
+    const response = await fetch(`${API_BASE_URL}/api/character-prompt`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
