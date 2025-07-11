@@ -2,6 +2,7 @@ import boto3
 import json
 import base64
 import logging
+import os
 import requests
 import time
 from typing import Dict, Any, Optional
@@ -24,7 +25,15 @@ class ImageGenerationService:
             return
 
         try:
-            self.bedrock_client = boto3.client("bedrock-runtime")
+            # Get AWS region from environment
+            aws_region = os.getenv("AWS_REGION", "us-east-1")
+
+            self.bedrock_client = boto3.client(
+                "bedrock-runtime",
+                region_name=aws_region,
+                aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            )
             logger.info("AWS Bedrock client initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize AWS Bedrock client: {e}")
