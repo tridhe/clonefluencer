@@ -6,6 +6,8 @@ logger = logging.getLogger(__name__)
 
 prompt_bp = Blueprint("prompt", __name__)
 
+# Route definitions for prompt generation and enhancement
+
 
 @prompt_bp.route("/enhance-prompt", methods=["POST", "OPTIONS"])
 def enhance_prompt():
