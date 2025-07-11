@@ -6,7 +6,7 @@ A GenAI-powered platform that creates virtual influencers for content, campaigns
 
 ## 🚀 Demo URL
 
-[Live Demo](https://your-demo-url.com) | [Video Demo](https://your-video-demo-url.com)
+[Live Demo](https://main.dqu54vqh53v5a.amplifyapp.com/) | [Video Demo](https://youtu.be/_GXPzIEyObg)
 
 **Deployed on AWS** - Full production deployment using AWS infrastructure for scalability and reliability
 
