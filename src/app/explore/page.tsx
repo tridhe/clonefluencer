@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Download, Wand2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Generation } from '@/lib/storage';
+import { apiService } from '../../lib/api';
 
 const ExplorePage: React.FC = () => {
   const [generations, setGenerations] = useState<Generation[]>([]);
@@ -12,22 +13,21 @@ const ExplorePage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchPublic = async () => {
+    const fetchExploreImages = async () => {
       try {
         setError(null);
         setLoading(true);
         // Fetch public generations (no auth required)
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/explore?limit=50`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to load');
-        setGenerations(data.generations || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load');
+        const response = await apiService.getExploreImages({ limit: 50 });
+        setGenerations(response.images || []);
+      } catch (error) {
+        console.error('Failed to fetch explore images:', error);
+        setError('Failed to load');
       } finally {
         setLoading(false);
       }
     };
-    fetchPublic();
+    fetchExploreImages();
   }, []);
 
   const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });

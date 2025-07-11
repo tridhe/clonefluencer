@@ -1,4 +1,5 @@
 import { authService } from './auth';
+import { API_BASE_URL } from './api';
 
 export interface Generation {
   generation_id: string;
@@ -35,7 +36,7 @@ export interface GenerationsResponse extends StorageResponse {
 }
 
 class StorageService {
-  private baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  private baseUrl = API_BASE_URL;
 
   private async getAuthHeaders(): Promise<HeadersInit> {
     const user = await authService.getCurrentUser();

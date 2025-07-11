@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Upload, X, Sparkles, User, Package, Image as ImageIcon, Download, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { storageService, Generation } from '@/lib/storage';
-import { mergeImagesSideBySide } from '@/lib/imageUtils';
 import { apiService } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
 
@@ -63,13 +62,10 @@ const StudioPageContent = () => {
   // Load marketplace models
   const loadMarketplaceModels = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/explore?limit=50`);
-      const data = await response.json();
-      if (response.ok) {
-        setMarketplaceModels(data.generations || []);
-      }
-    } catch (error) {
-      console.error('Failed to load marketplace models:', error);
+      const response = await apiService.getExploreImages({ limit: 50 });
+      setMarketplaceModels(response.generations || []);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -118,21 +114,21 @@ const StudioPageContent = () => {
     
     try {
       // Step 1: Merge the images side by side
-      const merged = await mergeImagesSideBySide(
-        selectedModel.image_url,
-        productImage,
-        512,
-        512
-      );
+      const merged = await apiService.mergeImages({
+        left_url: selectedModel.image_url,
+        right_url: productImage,
+        target_width: 512,
+        target_height: 512
+      });
       
-      setMergedImage(merged);
+      setMergedImage(merged.merged_image);
       setGenerationStep('Generating with FLUX...');
       
       // Step 2: Send merged image to FLUX Kontext for final generation with optimization
       const fluxPrompt = `${prompt}. Make the person on the left wear or use the item on the right. Create a cohesive, natural-looking image where the AI model is showcasing the product.`;
       
       const fluxResponse = await apiService.editImageWithFlux({
-        input_image: merged,
+        input_image: merged.merged_image,
         prompt: fluxPrompt,
         llm_model: 'claude', // Use Claude for Kontext optimization
         aspect_ratio: "1:1",

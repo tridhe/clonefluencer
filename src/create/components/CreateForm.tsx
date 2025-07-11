@@ -201,24 +201,12 @@ const CreateForm = () => {
 
     try {
       // First merge the images
-      const mergeResponse = await fetch('http://localhost:5000/api/image/merge', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          left_url: `data:image/png;base64,${generatedImage}`,
-          right_url: `data:image/png;base64,${productImage}`,
-          target_width: 512,
-          target_height: 512
-        })
+      const mergeData = await apiService.mergeImages({
+        left_url: `data:image/png;base64,${generatedImage}`,
+        right_url: `data:image/png;base64,${productImage}`,
+        target_width: 512,
+        target_height: 512,
       });
-
-      if (!mergeResponse.ok) {
-        throw new Error('Failed to merge images');
-      }
-
-      const mergeData = await mergeResponse.json();
       
       // Then send to FLUX for final generation with Kontext optimization
       const fluxResponse = await apiService.editImageWithFlux({
