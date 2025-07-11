@@ -19,7 +19,7 @@ const ExplorePage: React.FC = () => {
         setLoading(true);
         // Fetch public generations (no auth required)
         const response = await apiService.getExploreImages({ limit: 50 });
-        setGenerations(response.images || []);
+        setGenerations(response.generations || []);
       } catch (error) {
         console.error('Failed to fetch explore images:', error);
         setError('Failed to load');
