@@ -93,36 +93,6 @@ def character_prompt():
         return jsonify({"error": "Failed to generate character prompt"}), 500
 
 
-@prompt_bp.route("/generate", methods=["POST", "OPTIONS"])
-def generate():
-    """Generate prompt based on character builder selections (alias for character-prompt)"""
-    # Handle OPTIONS request for CORS preflight
-    if request.method == "OPTIONS":
-        return "", 200
-
-    try:
-        data = request.get_json()
-        character_features = data.get("character_features", {})
-        base_prompt = data.get("base_prompt", "")
-        llm_model = data.get("llm_model", "claude")
-
-        generated_prompt = prompt_service.generate_character_prompt(
-            character_features, base_prompt, llm_model
-        )
-
-        return jsonify(
-            {
-                "character_features": character_features,
-                "base_prompt": base_prompt,
-                "generated_prompt": generated_prompt.strip(),
-            }
-        )
-
-    except Exception as e:
-        logger.error(f"Error generating character prompt: {e}")
-        return jsonify({"error": "Failed to generate character prompt"}), 500
-
-
 @prompt_bp.route("/surprise-prompt", methods=["POST", "OPTIONS"])
 def surprise_prompt():
     """Generate a random surprise prompt for inspiration"""
