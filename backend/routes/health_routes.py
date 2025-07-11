@@ -47,17 +47,20 @@ def debug_storage():
         import boto3
         from botocore.exceptions import ClientError
 
+        # Get AWS region from environment
+        aws_region = os.getenv("AWS_REGION", "us-east-1")
+
         # Test AWS credentials
-        sts = boto3.client("sts")
+        sts = boto3.client("sts", region_name=aws_region)
         identity = sts.get_caller_identity()
 
         # Test S3
-        s3 = boto3.client("s3")
+        s3 = boto3.client("s3", region_name=aws_region)
         bucket_name = os.getenv("S3_BUCKET_NAME", "influencer-ai-images-ttn-123")
         s3.head_bucket(Bucket=bucket_name)
 
         # Test DynamoDB
-        dynamodb = boto3.resource("dynamodb")
+        dynamodb = boto3.resource("dynamodb", region_name=aws_region)
         table_name = os.getenv("DYNAMODB_TABLE_NAME", "influencer-ai-generations")
         table = dynamodb.Table(table_name)
         table.load()
