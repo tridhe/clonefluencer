@@ -33,6 +33,15 @@ const apiService = {
     return handleResponse(response);
   },
 
+  enhancePrompt: async (data: { prompt: string; llm_model: string }) => {
+    const response = await fetch(`${API_BASE_URL}/api/enhance-prompt`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  },
+
   editImageWithFlux: async (data: any) => {
     const response = await fetch(`${API_BASE_URL}/api/image/flux`, {
       method: "POST",
