@@ -38,3 +38,51 @@ def debug_env():
             "all_env_vars_present": all(var != "NOT SET" for var in env_vars.values()),
         }
     )
+
+
+@health_bp.route("/debug/storage", methods=["GET"])
+def debug_storage():
+    """Debug endpoint to test storage service initialization"""
+    try:
+        import boto3
+        from botocore.exceptions import ClientError
+
+        # Test AWS credentials
+        sts = boto3.client("sts")
+        identity = sts.get_caller_identity()
+
+        # Test S3
+        s3 = boto3.client("s3")
+        bucket_name = os.getenv("S3_BUCKET_NAME", "influencer-ai-images-ttn-123")
+        s3.head_bucket(Bucket=bucket_name)
+
+        # Test DynamoDB
+        dynamodb = boto3.resource("dynamodb")
+        table_name = os.getenv("DYNAMODB_TABLE_NAME", "influencer-ai-generations")
+        table = dynamodb.Table(table_name)
+        table.load()
+
+        return jsonify(
+            {
+                "status": "success",
+                "aws_account": identity.get("Account"),
+                "s3_bucket": bucket_name,
+                "dynamodb_table": table_name,
+                "table_status": table.table_status,
+                "message": "All AWS services accessible",
+            }
+        )
+
+    except ClientError as e:
+        return jsonify(
+            {
+                "status": "error",
+                "error_type": "ClientError",
+                "error_code": e.response["Error"]["Code"],
+                "error_message": str(e),
+            }
+        )
+    except Exception as e:
+        return jsonify(
+            {"status": "error", "error_type": type(e).__name__, "error_message": str(e)}
+        )
