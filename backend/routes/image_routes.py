@@ -248,7 +248,7 @@ def merge_images():
         return jsonify({"error": str(e)}), 500
 
 
-@image_bp.route("/flux", methods=["POST", "OPTIONS"])
+@image_bp.route("/image/flux", methods=["POST", "OPTIONS"])
 def flux_edit_image():
     """Edit image using FLUX API"""
     try:
