@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Upload, X, Sparkles, User, Package, Image as ImageIcon, Download, Users, Check } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
