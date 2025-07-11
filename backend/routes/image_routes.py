@@ -20,7 +20,7 @@ if flux_api_key:
     image_service.set_flux_api_key(flux_api_key)
 
 
-@image_bp.route("/generate", methods=["POST"])
+@image_bp.route("/generate", methods=["POST", "OPTIONS"])
 def generate_image():
     """Generate an image using AWS Bedrock"""
     try:
@@ -126,7 +126,7 @@ def generate_image():
         return jsonify({"error": str(e)}), 500
 
 
-@image_bp.route("/proxy", methods=["POST"])
+@image_bp.route("/proxy", methods=["POST", "OPTIONS"])
 def proxy_image():
     """Proxy endpoint to fetch images and return as base64, bypassing CORS"""
     try:
@@ -173,7 +173,7 @@ def proxy_image():
         return jsonify({"error": str(e)}), 500
 
 
-@image_bp.route("/merge", methods=["POST"])
+@image_bp.route("/merge", methods=["POST", "OPTIONS"])
 def merge_images():
     """Server-side image merging to avoid CORS issues"""
     try:
@@ -248,22 +248,9 @@ def merge_images():
         return jsonify({"error": str(e)}), 500
 
 
-@image_bp.route("/image/flux-edit", methods=["POST"])
+@image_bp.route("/flux", methods=["POST", "OPTIONS"])
 def flux_edit_image():
-    """
-    Use FLUX.1 Kontext to edit an image based on a text prompt
-
-    Expected JSON payload:
-    {
-        "input_image": "data:image/jpeg;base64,..." or base64 string,
-        "prompt": "make the person on the left wear the jacket on the right",
-        "llm_model": "claude",  // optional, for prompt optimization
-        "aspect_ratio": "1:1",  // optional
-        "seed": 12345,  // optional
-        "safety_tolerance": 2,  // optional (0-2)
-        "output_format": "jpeg"  // optional
-    }
-    """
+    """Edit image using FLUX API"""
     try:
         data = request.get_json()
 
