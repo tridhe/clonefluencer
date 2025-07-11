@@ -40,7 +40,15 @@ logger = logging.getLogger(__name__)
 def create_app():
     """Create and configure the Flask application"""
     app = Flask(__name__)
-    CORS(app)  # Enable CORS for all routes
+
+    # Define allowed origins for CORS
+    allowed_origins = [
+        "https://main.dqu54vqh53v5a.amplifyapp.com",  # Your Amplify frontend
+        "http://localhost:3000",  # For local development
+    ]
+
+    # Enable CORS with specific origins
+    CORS(app, origins=allowed_origins, supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(health_bp)
