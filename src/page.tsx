@@ -605,34 +605,7 @@ const FeaturesSection = ({ onJudgeAccess }: { onJudgeAccess: () => void }) => {
           })}
         </div>
 
-        {/* Judge Access Section */}
-        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-8 border border-indigo-100 mb-12">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <Shield className="w-4 h-4 mr-2" />
-              AWS Hackathon Judge Access
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Full Platform Access for Judges
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Complete access to all features including AWS Bedrock models, image generation, storage, and analytics. 
-              Pre-configured accounts with unlimited credits for comprehensive evaluation.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                             <button 
-                 onClick={onJudgeAccess}
-                 className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors duration-200 inline-flex items-center space-x-2"
-               >
-                <span>Access Judge Portal</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-              <div className="text-sm text-gray-500">
-                Credentials available in README.md
-              </div>
-            </div>
-            </div>
-          </div>
+        {/* Judge Access Section removed */}
           
         {/* Bottom CTA */}
             <div className="text-center">
