@@ -230,3 +230,18 @@
     --tw-gradient-to: #c0c0c0 var(--tw-gradient-to-position);
   }
 }
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out forwards;
+}
