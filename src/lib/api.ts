@@ -3,8 +3,24 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
     const errorText = await response.text();
-    console.error(`API Error: ${response.status} ${response.statusText}`, errorText);
-    throw new Error(`API request failed with status ${response.status}`);
+
+    // Try to parse structured error message returned by backend
+    let errorMessage: string | undefined;
+    try {
+      const errorJson = JSON.parse(errorText);
+      errorMessage = errorJson.error ?? undefined;
+    } catch {
+      // Not JSON – use plain text
+      errorMessage = errorText;
+    }
+
+    const fallbackMessage = `API request failed with status ${response.status}`;
+    const finalMessage = (errorMessage && errorMessage.trim().length > 0)
+      ? errorMessage
+      : fallbackMessage;
+
+    console.error(`API Error: ${response.status} ${response.statusText}`, finalMessage);
+    throw new Error(finalMessage);
   }
   return response.json();
 };

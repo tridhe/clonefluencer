@@ -26,6 +26,7 @@ const CreateForm = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isImageSaved, setIsImageSaved] = useState(false);
   const [enhancedPrompt, setEnhancedPrompt] = useState<string | null>(null);
+  const [generationError, setGenerationError] = useState<string>('');
 
   // Character limits based on image model
   const getCharacterLimit = (model: string) => {
@@ -75,7 +76,9 @@ const CreateForm = () => {
 
   const handleGenerate = async () => {
     if (!prompt.trim() || isPromptOverLimit) return;
-    
+
+    // Reset previous error message
+    setGenerationError('');
     setIsGeneratingImage(true);
     setGeneratedImage(null);
     setIsImageSaved(false); // Reset saved state for new image
@@ -91,8 +94,10 @@ const CreateForm = () => {
 
       setGeneratedImage(response.image);
       setEnhancedPrompt(response.prompt || prompt);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating image:', error);
+      // Surface the error to the UI for user feedback
+      setGenerationError(error.message ?? 'Failed to generate image. Please try again.');
     } finally {
       setIsGeneratingImage(false);
     }
@@ -287,6 +292,24 @@ const CreateForm = () => {
                 llmModel={selectedLLM}
                 imageModel={selectedModel}
               />
+
+              {generationError && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="mt-2 flex items-start gap-2 rounded-md bg-red-100 p-3 text-sm text-red-800"
+                >
+                  <span>{generationError}</span>
+                  <button
+                    type="button"
+                    aria-label="Dismiss error message"
+                    onClick={() => setGenerationError('')}
+                    className="ml-auto text-red-600 hover:text-red-800 focus:outline-none"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
               
               <ActionButtons 
                 onOpenCharacterBuilder={handleOpenCharacterBuilder}
