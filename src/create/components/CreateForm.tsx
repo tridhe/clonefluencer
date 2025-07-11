@@ -126,6 +126,8 @@ const CreateForm = () => {
       });
       console.log('Generated character prompt:', response.generated_prompt);
       setPrompt(response.generated_prompt);
+      // Close the modal after successful prompt generation
+      setIsCharacterModalOpen(false);
     } catch (error) {
       console.error('Failed to generate character prompt:', error);
       // Fallback: create a simple prompt from selected features

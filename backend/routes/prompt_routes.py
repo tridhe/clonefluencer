@@ -7,9 +7,13 @@ logger = logging.getLogger(__name__)
 prompt_bp = Blueprint("prompt", __name__)
 
 
-@prompt_bp.route("/enhance-prompt", methods=["POST"])
+@prompt_bp.route("/enhance-prompt", methods=["POST", "OPTIONS"])
 def enhance_prompt():
     """Enhance user prompt with AI suggestions"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
         user_prompt = data.get("prompt", "")
@@ -29,9 +33,13 @@ def enhance_prompt():
         return jsonify({"error": "Failed to enhance prompt"}), 500
 
 
-@prompt_bp.route("/optimize-kontext-prompt", methods=["POST"])
+@prompt_bp.route("/optimize-kontext-prompt", methods=["POST", "OPTIONS"])
 def optimize_kontext_prompt():
     """Optimize user prompt specifically for Flux Kontext"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
         user_prompt = data.get("prompt", "")
@@ -53,9 +61,13 @@ def optimize_kontext_prompt():
         return jsonify({"error": "Failed to optimize Kontext prompt"}), 500
 
 
-@prompt_bp.route("/character-prompt", methods=["POST"])
+@prompt_bp.route("/character-prompt", methods=["POST", "OPTIONS"])
 def character_prompt():
     """Generate prompt based on character builder selections"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
         character_features = data.get("character_features", {})
@@ -79,9 +91,43 @@ def character_prompt():
         return jsonify({"error": "Failed to generate character prompt"}), 500
 
 
-@prompt_bp.route("/surprise-prompt", methods=["POST"])
+@prompt_bp.route("/generate", methods=["POST", "OPTIONS"])
+def generate():
+    """Generate prompt based on character builder selections (alias for character-prompt)"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
+    try:
+        data = request.get_json()
+        character_features = data.get("character_features", {})
+        base_prompt = data.get("base_prompt", "")
+        llm_model = data.get("llm_model", "claude")
+
+        generated_prompt = prompt_service.generate_character_prompt(
+            character_features, base_prompt, llm_model
+        )
+
+        return jsonify(
+            {
+                "character_features": character_features,
+                "base_prompt": base_prompt,
+                "generated_prompt": generated_prompt.strip(),
+            }
+        )
+
+    except Exception as e:
+        logger.error(f"Error generating character prompt: {e}")
+        return jsonify({"error": "Failed to generate character prompt"}), 500
+
+
+@prompt_bp.route("/surprise-prompt", methods=["POST", "OPTIONS"])
 def surprise_prompt():
     """Generate a random surprise prompt for inspiration"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         # This can be expanded to include more sophisticated random generation
         import random
