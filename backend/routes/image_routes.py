@@ -23,6 +23,10 @@ if flux_api_key:
 @image_bp.route("/generate", methods=["POST", "OPTIONS"])
 def generate_image():
     """Generate an image using AWS Bedrock"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
 
@@ -129,6 +133,10 @@ def generate_image():
 @image_bp.route("/proxy", methods=["POST", "OPTIONS"])
 def proxy_image():
     """Proxy endpoint to fetch images and return as base64, bypassing CORS"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
 
@@ -176,6 +184,10 @@ def proxy_image():
 @image_bp.route("/merge", methods=["POST", "OPTIONS"])
 def merge_images():
     """Server-side image merging to avoid CORS issues"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
 
@@ -251,6 +263,10 @@ def merge_images():
 @image_bp.route("/image/flux", methods=["POST", "OPTIONS"])
 def flux_edit_image():
     """Edit image using FLUX API"""
+    # Handle OPTIONS request for CORS preflight
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json()
 
